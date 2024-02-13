@@ -58,7 +58,7 @@ async fn main() {
     println!("Printing available dialogs:");
     while let Some(dialog) = &iter_dialogs.next().await.unwrap() {
         match &dialog.chat {
-            Chat::User(user) => println!(" - DM [ {} ]", user.full_name()),
+            Chat::User(user) => println!(" - DM with [ {} ]: {}", user.full_name(), dialog.id()),
             Chat::Group(_) => todo!(),
             Chat::Channel(_) => todo!(),
         }
