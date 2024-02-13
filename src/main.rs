@@ -1,11 +1,18 @@
-use std::{
-    env,
-    io::{self, Read},
-};
+use std::{env, io};
 
-use grammers_client::{types::Chat, Client, Config};
+use grammers_client::{types::{Chat, Dialog}, Client, Config};
 use grammers_session::Session;
 use serde_json::Value;
+
+use crossterm::{
+    event::{self, KeyCode, KeyEventKind},
+    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    ExecutableCommand,
+};
+use ratatui::{
+    prelude::{CrosstermBackend, Stylize, Terminal},
+    widgets::Paragraph,
+};
 
 const SECRETS: &'static str = include_str!("secrets.json");
 
@@ -46,6 +53,7 @@ async fn main() {
     println!("Logged in as [ {} ].", user.full_name());
 
     let mut iter_dialogs = client.iter_dialogs();
+    let mut dialogs: Vec<&Dialog> = vec![];
 
     println!("Printing available dialogs:");
     while let Some(dialog) = &iter_dialogs.next().await.unwrap() {
@@ -54,5 +62,6 @@ async fn main() {
             Chat::Group(_) => todo!(),
             Chat::Channel(_) => todo!(),
         }
+        dialog.dialog;
     }
 }
