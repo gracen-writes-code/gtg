@@ -62,6 +62,5 @@ async fn main() {
             Chat::Group(_) => todo!(),
             Chat::Channel(_) => todo!(),
         }
-        dialog.dialog;
     }
 }
