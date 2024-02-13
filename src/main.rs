@@ -4,6 +4,8 @@ use grammers_client::{types::{Chat, Dialog}, Client, Config};
 use grammers_session::Session;
 use serde_json::Value;
 
+use tokio::runtime::Runtime as TokioRuntime;
+
 use crossterm::{
     event::{self, KeyCode, KeyEventKind},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -16,20 +18,40 @@ use ratatui::{
 
 const SECRETS: &'static str = include_str!("secrets.json");
 
+struct TelegramClient {
+    rt: TokioRuntime,
+
+    client: Client,
+}
+
+impl TelegramClient {
+    fn new() -> Self {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+
+        let secrets: Value = serde_json::from_str(SECRETS).unwrap();
+        let session_file = env::var("HOME").unwrap() + "/gtg.session";
+        
+        let client = rt.block_on(Client::connect(Config {
+            session: Session::load_file_or_create(session_file.clone()).unwrap(),
+            api_id: secrets["api_id"].as_i64().unwrap() as i32,
+            api_hash: secrets["api_hash"].as_str().unwrap().into(),
+            params: Default::default(),
+        })).unwrap();
+
+        Self {
+            rt,
+            client,
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() {
-    let secrets: Value = serde_json::from_str(SECRETS).unwrap();
-    let session_file = env::var("HOME").unwrap() + "/gtg.session";
-
-    let client = Client::connect(Config {
-        session: Session::load_file_or_create(session_file.clone()).unwrap(),
-        api_id: secrets["api_id"].as_i64().unwrap() as i32,
-        api_hash: secrets["api_hash"].as_str().unwrap().into(),
-        params: Default::default(),
-    })
-    .await
-    .unwrap();
-
+    let client = TelegramClient::new();
+    
     let stdin = io::stdin();
 
     let user = if !client.is_authorized().await.unwrap() {
