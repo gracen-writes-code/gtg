@@ -1,10 +1,6 @@
+mod telegram;
+
 use std::{env, io};
-
-use grammers_client::{types::{Chat, Dialog}, Client, Config};
-use grammers_session::Session;
-use serde_json::Value;
-
-use tokio::runtime::Runtime as TokioRuntime;
 
 use crossterm::{
     event::{self, KeyCode, KeyEventKind},
@@ -16,73 +12,48 @@ use ratatui::{
     widgets::Paragraph,
 };
 
-const SECRETS: &'static str = include_str!("secrets.json");
+use crate::telegram::Client;
 
-struct TelegramClient {
-    rt: TokioRuntime,
+fn main() {
+    let client = Client::new();
 
-    client: Client,
-}
-
-impl TelegramClient {
-    fn new() -> Self {
-        let rt = tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-            .unwrap();
-
-        let secrets: Value = serde_json::from_str(SECRETS).unwrap();
-        let session_file = env::var("HOME").unwrap() + "/gtg.session";
-        
-        let client = rt.block_on(Client::connect(Config {
-            session: Session::load_file_or_create(session_file.clone()).unwrap(),
-            api_id: secrets["api_id"].as_i64().unwrap() as i32,
-            api_hash: secrets["api_hash"].as_str().unwrap().into(),
-            params: Default::default(),
-        })).unwrap();
-
-        Self {
-            rt,
-            client,
-        }
-    }
-}
-
-#[tokio::main]
-async fn main() {
-    let client = TelegramClient::new();
-    
-    let stdin = io::stdin();
-
-    let user = if !client.is_authorized().await.unwrap() {
-        let mut number = String::new();
-        println!("Input phone number: ");
-        stdin.read_line(&mut number).unwrap();
-
-        let token = client.request_login_code(&number).await.unwrap();
-
-        let mut code = String::new();
-        println!("Input verification code: ");
-        stdin.read_line(&mut code).unwrap();
-
-        client.sign_in(&token, &code).await.unwrap()
+    let user = if client.logged_in() {
+        client.get_user()
     } else {
-        client.get_me().await.unwrap()
-    };
-
-    client.session().save_to_file(session_file).unwrap();
-
-    println!("Logged in as [ {} ].", user.full_name());
-
-    let mut iter_dialogs = client.iter_dialogs();
-    let mut dialogs: Vec<&Dialog> = vec![];
-
-    println!("Printing available dialogs:");
-    while let Some(dialog) = &iter_dialogs.next().await.unwrap() {
-        match &dialog.chat {
-            Chat::User(user) => println!(" - DM with [ {} ]: {}", user.full_name(), dialog.chat.id()),
-            Chat::Group(_) => todo!(),
-            Chat::Channel(_) => todo!(),
-        }
+        todo!() // log the client in
     }
+
+    // let stdin = io::stdin();
+
+    // let user = if !client.is_authorized().await.unwrap() {
+    //     let mut number = String::new();
+    //     println!("Input phone number: ");
+    //     stdin.read_line(&mut number).unwrap();
+
+    //     let token = client.request_login_code(&number).await.unwrap();
+
+    //     let mut code = String::new();
+    //     println!("Input verification code: ");
+    //     stdin.read_line(&mut code).unwrap();
+
+    //     client.sign_in(&token, &code).await.unwrap()
+    // } else {
+    //     client.get_me().await.unwrap()
+    // };
+
+    // client.session().save_to_file(session_file).unwrap();
+
+    // println!("Logged in as [ {} ].", user.full_name());
+
+    // let mut iter_dialogs = client.iter_dialogs();
+    // let mut dialogs: Vec<&Dialog> = vec![];
+
+    // println!("Printing available dialogs:");
+    // while let Some(dialog) = &iter_dialogs.next().await.unwrap() {
+    //     match &dialog.chat {
+    //         Chat::User(user) => println!(" - DM with [ {} ]: {}", user.full_name(), dialog.chat.id()),
+    //         Chat::Group(_) => todo!(),
+    //         Chat::Channel(_) => todo!(),
+    //     }
+    // }
 }
