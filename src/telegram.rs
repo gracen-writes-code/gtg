@@ -8,6 +8,10 @@ use tokio::runtime::Runtime as TokioRuntime;
 
 const SECRETS: &'static str = include_str!("secrets.json");
 
+pub enum TelegramError {
+    UnknownFailure
+}
+
 pub struct Client {
     rt: TokioRuntime,
     session_file: String,
@@ -35,6 +39,21 @@ impl Client {
             rt,
             session_file,
             inner: client,
+        }
+    }
+
+    pub fn logged_in(&self) -> Result<bool, TelegramError> {
+        todo!()
+    }
+
+    pub fn get_user(&self) -> Result<User, TelegramError> {
+        todo!()
+    }
+
+    pub fn save_session(&self) -> Result<(), TelegramError> {
+        match self.inner.session().save_to_file(self.session_file) {
+            Ok(()) => Ok(()),
+            Err(_) => Err(TelegramError::UnknownFailure)
         }
     }
 }
