@@ -1,3 +1,5 @@
+use std::env;
+
 use grammers_client::{types::{Chat, Dialog}, Client as GClient, Config};
 use grammers_session::Session;
 use serde_json::Value;
@@ -6,7 +8,7 @@ use tokio::runtime::Runtime as TokioRuntime;
 
 const SECRETS: &'static str = include_str!("secrets.json");
 
-pub struct TelegramClient {
+pub struct Client {
     rt: TokioRuntime,
 
     inner: GClient,

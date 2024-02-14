@@ -1,6 +1,6 @@
 mod telegram;
 
-use std::{env, io};
+use std::io;
 
 use crossterm::{
     event::{self, KeyCode, KeyEventKind},
@@ -21,7 +21,7 @@ fn main() {
         client.get_user()
     } else {
         todo!() // log the client in
-    }
+    };
 
     // let stdin = io::stdin();
 
