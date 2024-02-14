@@ -41,9 +41,11 @@ fn main() {
     //     client.get_me().await.unwrap()
     // };
 
+    client.save_session();
+
     // client.session().save_to_file(session_file).unwrap();
 
-    // println!("Logged in as [ {} ].", user.full_name());
+    println!("Logged in as [ {} ].", user.full_name());
 
     // let mut iter_dialogs = client.iter_dialogs();
     // let mut dialogs: Vec<&Dialog> = vec![];

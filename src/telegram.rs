@@ -10,12 +10,12 @@ const SECRETS: &'static str = include_str!("secrets.json");
 
 pub struct Client {
     rt: TokioRuntime,
-
+    session_file: String,
     inner: GClient,
 }
 
 impl Client {
-    fn new() -> Self {
+    pub fn new() -> Self {
         let rt = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
@@ -33,6 +33,7 @@ impl Client {
 
         Self {
             rt,
+            session_file,
             inner: client,
         }
     }
