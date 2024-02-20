@@ -1,6 +1,6 @@
 use std::env;
 
-use grammers_client::{types::{Chat, Dialog}, Client as GClient, Config};
+use grammers_client::{types::{chat::User as GUser, Chat, Dialog}, Client as GClient, Config};
 use grammers_session::Session;
 use serde_json::Value;
 
@@ -11,6 +11,18 @@ const SECRETS: &'static str = include_str!("secrets.json");
 #[derive(Debug)]
 pub enum TelegramError {
     UnknownFailure
+}
+
+pub struct User {
+    client: &Client,
+
+    inner: GUser
+}
+
+impl User {
+    pub fn full_name(&self) -> String {
+        self.inner.full_name()
+    }
 }
 
 pub struct Client {
@@ -44,11 +56,14 @@ impl Client {
     }
 
     pub fn logged_in(&self) -> Result<bool, TelegramError> {
-        todo!()
+        self.rt.block_on(self.inner.is_authorized()).map_err(|_| TelegramError::UnknownFailure)
     }
 
     pub fn get_user(&self) -> Result<User, TelegramError> {
-        todo!()
+        User {
+            client: self,
+            inner: self.rt.block_on(self.inner.get_me()).map_err(|_| TelegramError::UnknownFailure)?,
+        }
     }
 
     pub fn save_session(&self) -> Result<(), TelegramError> {
