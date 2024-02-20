@@ -1,6 +1,6 @@
 use std::env;
 
-use grammers_client::{types::{chat::User as GUser, Chat, Dialog}, Client as GClient, Config};
+use grammers_client::{types::{chat::User as GUser, Chat, Dialog as GDialog}, Client as GClient, Config};
 use grammers_session::Session;
 use serde_json::Value;
 
@@ -20,6 +20,16 @@ pub struct User {
 impl User {
     pub fn full_name(&self) -> String {
         self.inner.full_name()
+    }
+}
+
+pub struct Dialog {
+    inner: GDialog
+}
+
+impl Dialog {
+    pub fn name(&self) -> &str {
+        self.inner.chat().name()
     }
 }
 
@@ -61,6 +71,19 @@ impl Client {
         Ok(User {
             inner: self.rt.block_on(self.inner.get_me()).map_err(|_| TelegramError::UnknownFailure)?,
         })
+    }
+
+    pub fn get_dialogs(&self) -> Result<Vec<Dialog>, TelegramError> {
+        let iter_dialogs = self.inner.iter_dialogs()
+        let mut dialogs: Vec<Dialog> = vec![];
+
+        while let Some(dialog) = self.rt.block_on(iter_dialogs.next()).unwrap() {
+            dialogs.push(Dialog {
+                inner: dialog
+            })
+        }
+
+        dialogs
     }
 
     pub fn save_session(&self) -> Result<(), TelegramError> {
