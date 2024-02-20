@@ -64,7 +64,7 @@ impl Client {
     }
 
     pub fn save_session(&self) -> Result<(), TelegramError> {
-        match self.inner.session().save_to_file(self.session_file) {
+        match self.inner.session().save_to_file(self.session_file.clone()) {
             Ok(()) => Ok(()),
             Err(_) => Err(TelegramError::UnknownFailure)
         }
