@@ -33,7 +33,7 @@ impl Dialog {
     }
 
     pub fn last_message_text(&self) -> Option<&str> {
-        self.inner.last_message.map(|m| m.text())
+        self.inner.last_message.clone().map(|m| String::from(m.text()))
     }
 }
 
