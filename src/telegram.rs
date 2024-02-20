@@ -74,7 +74,7 @@ impl Client {
     }
 
     pub fn get_dialogs(&self) -> Result<Vec<Dialog>, TelegramError> {
-        let iter_dialogs = self.inner.iter_dialogs();
+        let mut iter_dialogs = self.inner.iter_dialogs();
         let mut dialogs: Vec<Dialog> = vec![];
 
         while let Some(dialog) = self.rt.block_on(iter_dialogs.next()).unwrap() {
