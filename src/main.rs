@@ -14,7 +14,7 @@ fn main() {
     let client = Client::new();
 
     let user = if client.logged_in().unwrap() {
-        client.get_user()
+        client.get_user().unwrap()
     } else {
         todo!() // log the client in
     };

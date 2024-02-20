@@ -13,8 +13,8 @@ pub enum TelegramError {
     UnknownFailure
 }
 
-pub struct User {
-    client: &Client,
+pub struct User<'a> {
+    client: &'a Client,
 
     inner: GUser
 }
@@ -60,10 +60,10 @@ impl Client {
     }
 
     pub fn get_user(&self) -> Result<User, TelegramError> {
-        User {
+        Ok(User {
             client: self,
             inner: self.rt.block_on(self.inner.get_me()).map_err(|_| TelegramError::UnknownFailure)?,
-        }
+        })
     }
 
     pub fn save_session(&self) -> Result<(), TelegramError> {
