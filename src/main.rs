@@ -13,7 +13,7 @@ use crate::telegram::Client;
 fn main() {
     let client = Client::new();
 
-    let user = if client.logged_in() {
+    let user = if client.logged_in().unwrap() {
         client.get_user()
     } else {
         todo!() // log the client in
