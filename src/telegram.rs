@@ -31,6 +31,10 @@ impl Dialog {
     pub fn name(&self) -> &str {
         self.inner.chat().name()
     }
+
+    pub fn last_message_text(&self) -> Option<&str> {
+        self.inner.last_message.map(|m| m.text())
+    }
 }
 
 pub struct Client {

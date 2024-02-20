@@ -44,7 +44,7 @@ fn main() {
     let dialogs = client.get_dialogs().unwrap();
 
     for dialog in dialogs {
-        println!("{}", dialog.name());
+        println!("{}: ({})", dialog.name(), dialog.last_message_text());
     }
 
     // let mut iter_dialogs = client.iter_dialogs();
