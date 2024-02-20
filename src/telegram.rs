@@ -32,7 +32,7 @@ impl Dialog {
         self.inner.chat().name()
     }
 
-    pub fn last_message_text(&self) -> Option<&str> {
+    pub fn last_message_text(&self) -> Option<String> {
         self.inner.last_message.clone().map(|m| String::from(m.text()))
     }
 }
