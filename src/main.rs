@@ -46,7 +46,7 @@ fn main() {
     for dialog in dialogs {
         println!("{}: ({})", dialog.name(), match dialog.last_message_text() {
             Some(m) => m,
-            None => ""
+            None => "".to_string()
         });
     }
 
