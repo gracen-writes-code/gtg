@@ -41,7 +41,7 @@ fn main() {
 
     println!("Logged in as [ {} ].", user.full_name());
 
-    let dialogs = client.get_dialogs();
+    let dialogs = client.get_dialogs().unwrap();
 
     for dialog in dialogs {
         println!("{}", dialog.name());
