@@ -8,6 +8,7 @@ use tokio::runtime::Runtime as TokioRuntime;
 
 const SECRETS: &'static str = include_str!("secrets.json");
 
+#[derive(Debug)]
 pub enum TelegramError {
     UnknownFailure
 }
