@@ -4,13 +4,17 @@ use std::io;
 
 use crossterm::{
     event::{self, KeyCode, KeyEventKind},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
+    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
+    ExecutableCommand, execute,
 };
 
 use crate::telegram::Client;
 
 fn main() {
+    let mut stdout = io::stdout();
+
+    execute!(stdout, Clear { ClearType::All });
+
     let client = Client::new();
 
     let user = if client.logged_in().unwrap() {
