@@ -10,19 +10,24 @@ use crossterm::{
 
 use crate::telegram::Client;
 
-fn main() {
+#[derive(Debug)]
+enum AppError {
+    Unknown,
+
+    LoginFailed,
+}
+
+fn app_main() -> Result<(), AppError> {
     let mut stdout = io::stdout();
-
-    enable_raw_mode();
-
+    
     execute!(stdout, Clear(ClearType::All));
 
     let client = Client::new();
 
-    let user = if client.logged_in().unwrap() {
-        client.get_user().unwrap()
+    let user = if client.logged_in().map_err(|_| AppError::Unknown)? {
+        client.get_user().map_err(|_| AppError::Unknown)?
     } else {
-        todo!() // log the client in
+        return Err(AppError::LoginFailed);
     };
 
     // let stdin = io::stdin();
@@ -67,4 +72,15 @@ fn main() {
     //         Chat::Channel(_) => todo!(),
     //     }
     // }
+}
+
+fn main() {
+    enable_raw_mode();
+
+    match app_main() {
+        Ok(_) => println!("Exited successfully."),
+        Err(e) => println!("Exited with error: {e:?}")
+    };
+
+    disable_raw_mode();
 }
