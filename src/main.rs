@@ -13,6 +13,8 @@ use crate::telegram::Client;
 fn main() {
     let mut stdout = io::stdout();
 
+    enable_raw_mode();
+
     execute!(stdout, Clear(ClearType::All));
 
     let client = Client::new();
