@@ -72,6 +72,8 @@ fn app_main() -> Result<(), AppError> {
     //         Chat::Channel(_) => todo!(),
     //     }
     // }
+
+    Ok(())
 }
 
 fn main() {
