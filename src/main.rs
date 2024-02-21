@@ -79,10 +79,12 @@ fn app_main() -> Result<(), AppError> {
 fn main() {
     enable_raw_mode();
 
-    match app_main() {
+    let res = app_main();
+
+    disable_raw_mode();
+
+    match res {
         Ok(_) => println!("Exited successfully."),
         Err(e) => println!("Exited with error: {e:?}")
     };
-
-    disable_raw_mode();
 }
