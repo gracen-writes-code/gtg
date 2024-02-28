@@ -42,6 +42,7 @@ fn app_main() -> Result<(), AppError> {
     } else {
         let mut phone_number = vec![10u8; 10];
 
+        let mut i = 0;
         loop {
             match read_ch() {
                 '0' => phone_number[i] = 0,
@@ -54,8 +55,9 @@ fn app_main() -> Result<(), AppError> {
                 '7' => phone_number[i] = 7,
                 '8' => phone_number[i] = 8,
                 '9' => phone_number[i] = 9,
-                _ => {}
+                _ => i -= 1,
             };
+            i += 1;
 
             queue!(stdout, cursor::MoveTo(0, 0));
             let number_str = String::new();
@@ -71,6 +73,10 @@ fn app_main() -> Result<(), AppError> {
 
             print!("{}", number_str);
             stdout.flush();
+
+            if i > 9 {
+                break;
+            }
         }
 
         return Err(AppError::Unknown);
