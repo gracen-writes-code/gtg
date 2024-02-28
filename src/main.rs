@@ -63,7 +63,7 @@ fn app_main() -> Result<(), AppError> {
             let mut number_str = String::new();
 
             for digit in &phone_number {
-                if digit > 9 {
+                if digit > &9 {
                     number_str += "_";
                 }
                 else {
