@@ -67,7 +67,7 @@ fn app_main() -> Result<(), AppError> {
                     number_str += "_";
                 }
                 else {
-                    number_str += format!("{}", digit);
+                    number_str += &format!("{}", digit);
                 }
             }
 
