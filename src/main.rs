@@ -60,9 +60,9 @@ fn app_main() -> Result<(), AppError> {
             i += 1;
 
             queue!(stdout, cursor::MoveTo(0, 0));
-            let number_str = String::new();
+            let mut number_str = String::new();
 
-            for digit in phone_number {
+            for digit in &phone_number {
                 if digit > 9 {
                     number_str += "_";
                 }
