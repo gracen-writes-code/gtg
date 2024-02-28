@@ -40,11 +40,38 @@ fn app_main() -> Result<(), AppError> {
     let user = if client.logged_in().map_err(|_| AppError::Unknown)? {
         client.get_user().map_err(|_| AppError::Unknown)
     } else {
-        let number = read_ch();
+        let mut phone_number = vec![10u8; 10];
 
-        queue!(stdout, cursor::MoveTo(0, 0));
-        print!("{}", number);
-        stdout.flush();
+        loop {
+            match read_ch() {
+                '0' => phone_number[i] = 0,
+                '1' => phone_number[i] = 1,
+                '2' => phone_number[i] = 2,
+                '3' => phone_number[i] = 3,
+                '4' => phone_number[i] = 4,
+                '5' => phone_number[i] = 5,
+                '6' => phone_number[i] = 6,
+                '7' => phone_number[i] = 7,
+                '8' => phone_number[i] = 8,
+                '9' => phone_number[i] = 9,
+                _ => {}
+            };
+
+            queue!(stdout, cursor::MoveTo(0, 0));
+            let number_str = String::new();
+
+            for digit in phone_number {
+                if digit > 9 {
+                    number_str += "_";
+                }
+                else {
+                    number_str += format!("{}", digit);
+                }
+            }
+
+            print!("{}", number_str);
+            stdout.flush();
+        }
 
         return Err(AppError::Unknown);
     }?;
