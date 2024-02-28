@@ -25,10 +25,10 @@ fn app_main() -> Result<(), AppError> {
     let client = Client::new();
 
     let user = if client.logged_in().map_err(|_| AppError::Unknown)? {
-        client.get_user().map_err(|_| AppError::Unknown)?
+        client.get_user().map_err(|_| AppError::Unknown)
     } else {
-        return Err(AppError::LoginFailed);
-    };
+        Err(AppError::LoginFailed)
+    }?;
 
     // let stdin = io::stdin();
 
