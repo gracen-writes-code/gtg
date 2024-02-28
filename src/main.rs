@@ -23,7 +23,7 @@ fn read_ch() -> char {
         if let Ok(Event::Key(KeyEvent {
             code: KeyCode::Char(c),
             ..
-        })) = event.read()
+        })) = event::read()
         {
             return c;
         }
