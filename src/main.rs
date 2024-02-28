@@ -3,9 +3,10 @@ mod telegram;
 use std::io;
 
 use crossterm::{
-    event::{self, KeyCode, KeyEventKind},
-    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand, execute,
+    cursor,
+    event::{self, Event, KeyCode, KeyEvent},
+    terminal::{self, disable_raw_mode, enable_raw_mode, Clear, ClearType},
+    execute, queue,
 };
 
 use crate::telegram::Client;
@@ -15,6 +16,18 @@ enum AppError {
     Unknown,
 
     LoginFailed,
+}
+
+fn read_ch() -> char {
+    loop {
+        if let Ok(Event::Key(KeyEvent {
+            code: KeyCode::Char(c),
+            ..
+        })) = event.read()
+        {
+            return c;
+        }
+    }
 }
 
 fn app_main() -> Result<(), AppError> {
@@ -27,7 +40,13 @@ fn app_main() -> Result<(), AppError> {
     let user = if client.logged_in().map_err(|_| AppError::Unknown)? {
         client.get_user().map_err(|_| AppError::Unknown)
     } else {
-        Err(AppError::LoginFailed)
+        let number = read_ch();
+
+        queue!(stdout, cursor::MoveTo(0, 0));
+        print!("{}", number);
+        stdout.flush();
+
+        return Err(AppError::Unknown);
     }?;
 
     // let stdin = io::stdin();
