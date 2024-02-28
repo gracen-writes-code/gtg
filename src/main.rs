@@ -1,6 +1,6 @@
 mod telegram;
 
-use std::io;
+use std::io::{self, Write};
 
 use crossterm::{
     cursor,
