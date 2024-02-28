@@ -103,7 +103,7 @@ fn main() {
     disable_raw_mode();
 
     match res {
-        Ok(_) => println!("Exited successfully."),
-        Err(e) => println!("Exited with error: {e:?}")
+        Ok(_) => println!("\nExited successfully."),
+        Err(e) => println!("\nExited with error: {e:?}")
     };
 }
